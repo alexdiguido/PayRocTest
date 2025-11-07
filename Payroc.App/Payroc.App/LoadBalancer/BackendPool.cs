@@ -1,10 +1,11 @@
 using Payroc.App.LoadBalancer.BackendSelectionStrategies;
+using System.Collections.Concurrent;
 
 namespace Payroc.App.LoadBalancer;
 
 public class BackendPool : IBackendPool
 {
-    private readonly List<BackendServer> _backends = new();
+    private readonly ConcurrentBag<BackendServer> _backends = new();
     private readonly object _lock = new();
     private readonly IBackendSelectionStrategy _selectionStrategy;
 
@@ -20,50 +21,38 @@ public class BackendPool : IBackendPool
     }
 
     public BackendServer? GetNextHealthyBackend()
-    {
-        lock (_lock)
+    { 
+        var healthyBackends = _backends.Where(b => b.IsHealthy).ToList();
+        if (healthyBackends.Count == 0)
         {
-            var healthyBackends = _backends.Where(b => b.IsHealthy).ToList();
-            if (healthyBackends.Count == 0)
-            {
-                Logger.Warn("No healthy backends available!");
-                return null;
-            }
-            return _selectionStrategy.Select(healthyBackends);
+            Logger.Warn("No healthy backends available!");
+            return null;
         }
+        return _selectionStrategy.Select(healthyBackends);
     }
 
     public void UpdateBackendHealth(BackendServer backend, bool isHealthy)
     {
-        lock (_lock)
-        {
-            var wasHealthy = backend.IsHealthy;
-            backend.IsHealthy = isHealthy;
-            backend.LastChecked = DateTime.UtcNow;
+        var wasHealthy = backend.IsHealthy;
+        backend.IsHealthy = isHealthy;
+        backend.LastChecked = DateTime.UtcNow;
 
-            if (wasHealthy != isHealthy)
-            {
-                Logger.Info($"Backend {backend.Address} status changed: {(isHealthy ? "UP" : "DOWN")}");
-            }
+        if (wasHealthy != isHealthy)
+        {
+            Logger.Info($"Backend {backend.Address} status changed: {(isHealthy ? "UP" : "DOWN")}");
         }
     }
 
     public IReadOnlyList<BackendServer> GetAllBackends()
     {
-        lock (_lock)
-        {
-            return _backends.ToList();
-        }
+        return _backends.ToList();
     }
 
     public int HealthyCount
     {
         get
-        {
-            lock (_lock)
-            {
-                return _backends.Count(b => b.IsHealthy);
-            }
+        { 
+            return _backends.Count(b => b.IsHealthy);
         }
     }
 }

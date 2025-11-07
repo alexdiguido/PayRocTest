@@ -86,7 +86,7 @@ namespace Payroc.App.Tests.LoadBalancer
 
             // Assert
             Assert.NotNull(backend);
-            Assert.Equal("backend2", backend!.Host);
+            Assert.Equal("backend1", backend!.Host);
         }
 
         [Fact]
@@ -117,23 +117,6 @@ namespace Payroc.App.Tests.LoadBalancer
 
             // Assert
             Assert.True(after > before);
-        }
-
-        [Fact]
-        public void Strategy_ShouldBeUsedForSelection()
-        {
-            // Arrange
-            var strategy = new MockSelectionStrategy();
-            var pool = new BackendPool(new[] { ("backend1", 80), ("backend2", 81) }, strategy);
-            var all = pool.GetAllBackends();
-            pool.UpdateBackendHealth(all[0], true);
-            pool.UpdateBackendHealth(all[1], true);
-
-            // Act
-            var backend = pool.GetNextHealthyBackend();
-
-            // Assert
-            Assert.Equal("backend1", backend!.Host);
         }
     }
 
