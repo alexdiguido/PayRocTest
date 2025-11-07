@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  loadbalancer:
+    build: ./Payroc.App
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+    networks:
+      - lb-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  backend1:
+    image: nginx:alpine
+    volumes:
+      - ./backend-content:/usr/share/nginx/html:ro
+    networks:
+      - lb-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  backend2:
+    image: nginx:alpine
+    volumes:
+      - ./backend-content:/usr/share/nginx/html:ro
+    networks:
+      - lb-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  backend3:
+    image: nginx:alpine
+    volumes:
+      - ./backend-content:/usr/share/nginx/html:ro
+    networks:
+      - lb-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+networks:
+  lb-network:
+    driver: bridge

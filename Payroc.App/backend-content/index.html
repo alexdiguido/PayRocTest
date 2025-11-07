@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Backend Server</title></head>
+<body>
+    <h1>Backend Server Response</h1>
+    <p>Container: <span id="hostname"></span></p>
+    <script>
+        fetch('/api/hostname')
+            .then(r => r.text())
+            .then(h => document.getElementById('hostname').textContent = h);
+    </script>
+</body>
+</html>
