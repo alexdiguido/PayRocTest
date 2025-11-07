@@ -215,7 +215,7 @@ namespace Payroc.App.Tests.LoadBalancer
         }
 
         [Fact]
-        public void BackendServer_ShouldSupportConcurrentHealthStatusUpdates()
+        public async Task BackendServer_ShouldSupportConcurrentHealthStatusUpdates()
         {
             // Arrange
             var server = new BackendServer("backend1", 80);
@@ -228,7 +228,7 @@ namespace Payroc.App.Tests.LoadBalancer
                 tasks[i] = Task.Run(() => server.IsHealthy = isHealthy);
             }
 
-            Task.WaitAll(tasks);
+            await Task.WhenAll(tasks);
 
             // Assert - Just verify no exceptions thrown
             Assert.NotNull(server);

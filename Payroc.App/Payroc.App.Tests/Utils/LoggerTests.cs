@@ -8,11 +8,11 @@ namespace Payroc.App.Tests.Utils;
 public class LoggerTests
 {
     [Theory]
-    [InlineData("INFO", "Test info message", ConsoleColor.White)]
-    [InlineData("WARN", "Test warn message", ConsoleColor.Yellow)]
-    [InlineData("ERROR", "Test error message", ConsoleColor.Red)]
-    [InlineData("OK", "Test success message", ConsoleColor.Green)]
-    public void Log_Method_ShouldWriteExpectedFormat(string level, string message, ConsoleColor color)
+    [InlineData("INFO", "Test info message")]
+    [InlineData("WARN", "Test warn message")]
+    [InlineData("ERROR", "Test error message")]
+    [InlineData("OK", "Test success message")]
+    public void Log_Method_ShouldWriteExpectedFormat(string level, string message)
     {
         // Arrange
         var sw = new StringWriter();
