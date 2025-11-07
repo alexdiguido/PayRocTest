@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Payroc.App": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
