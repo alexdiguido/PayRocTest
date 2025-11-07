@@ -95,17 +95,4 @@ public class HealthCheckerTests
         Assert.True(pool.Backends[0].LastChecked > DateTime.MinValue);
         Assert.True(pool.Backends[1].LastChecked > DateTime.MinValue);
     }
-
-    private class BackendPoolMock : IBackendPool
-    {
-        public List<BackendServer> Backends { get; } = new();
-        public int HealthyCount => Backends.Count(b => b.IsHealthy);
-        public IReadOnlyList<BackendServer> GetAllBackends() => Backends.ToList();
-        public BackendServer? GetNextHealthyBackend() => Backends.FirstOrDefault(b => b.IsHealthy);
-        public void UpdateBackendHealth(BackendServer backend, bool isHealthy)
-        {
-            backend.IsHealthy = isHealthy;
-            backend.LastChecked = DateTime.UtcNow;
-        }
-    }
 }
