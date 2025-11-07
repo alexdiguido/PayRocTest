@@ -10,6 +10,8 @@ namespace Payroc.App.Tests.LoadBalancer;
 
 public class HealthCheckerTests
 {
+    private const int MillisecondsDelay = 5000;
+
     [Fact]
     public async Task StartAsync_ShouldMarkUnreachableBackendsAsUnhealthy()
     {
@@ -20,7 +22,7 @@ public class HealthCheckerTests
 
         // Act
         var task = checker.StartAsync();
-        await Task.Delay(1500); 
+        await Task.Delay(MillisecondsDelay); 
         checker.Stop();
 
         // Assert
@@ -37,7 +39,7 @@ public class HealthCheckerTests
 
         // Act
         var task = checker.StartAsync();
-        await Task.Delay(1500); 
+        await Task.Delay(MillisecondsDelay); 
         checker.Stop();
 
         // Assert
@@ -45,7 +47,7 @@ public class HealthCheckerTests
     }
 
     [Fact]
-    public void Stop_ShouldCancelHealthCheckLoop()
+    public async Task Stop_ShouldCancelHealthCheckLoop()
     {
         // Arrange
         var pool = new BackendPoolMock();
@@ -54,6 +56,7 @@ public class HealthCheckerTests
 
         // Act
         var task = checker.StartAsync();
+        await Task.Delay(MillisecondsDelay); 
         checker.Stop();
 
         // Assert
@@ -70,7 +73,7 @@ public class HealthCheckerTests
 
         // Act
         var task = checker.StartAsync();
-        await Task.Delay(1500);
+        await Task.Delay(MillisecondsDelay);
         checker.Stop();
 
         // Assert
@@ -85,10 +88,11 @@ public class HealthCheckerTests
         pool.Backends.Add(new BackendServer("localhost", 80));
         pool.Backends.Add(new BackendServer("invalid-host", 9999));
         var checker = new HealthChecker(pool);
+        var waitTime = MillisecondsDelay * pool.Backends.Count;
 
         // Act
         var task = checker.StartAsync();
-        await Task.Delay(1500);
+        await Task.Delay(waitTime);
         checker.Stop();
 
         // Assert
