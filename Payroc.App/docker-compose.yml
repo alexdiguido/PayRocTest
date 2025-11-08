@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   loadbalancer:
-    build: ./Payroc.App
+    build:
+      context: ./Payroc.App
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -17,9 +19,12 @@ services:
         hard: 65536
 
   backend1:
-    image: nginx:alpine
-    volumes:
-      - ./backend-content:/usr/share/nginx/html:ro
+    build:
+      context: ./BackendServer
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - SERVER_ID=Backend-1
     networks:
       - lb-network
     ulimits:
@@ -28,9 +33,12 @@ services:
         hard: 65536
 
   backend2:
-    image: nginx:alpine
-    volumes:
-      - ./backend-content:/usr/share/nginx/html:ro
+    build:
+      context: ./BackendServer
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - SERVER_ID=Backend-2
     networks:
       - lb-network
     ulimits:
@@ -39,9 +47,12 @@ services:
         hard: 65536
 
   backend3:
-    image: nginx:alpine
-    volumes:
-      - ./backend-content:/usr/share/nginx/html:ro
+    build:
+      context: ./BackendServer
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - SERVER_ID=Backend-3
     networks:
       - lb-network
     ulimits:

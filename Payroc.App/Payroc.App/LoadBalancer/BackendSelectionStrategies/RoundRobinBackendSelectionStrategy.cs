@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace Payroc.App.LoadBalancer.BackendSelectionStrategies;
 
 public class RoundRobinBackendSelectionStrategy : IBackendSelectionStrategy
@@ -9,7 +11,7 @@ public class RoundRobinBackendSelectionStrategy : IBackendSelectionStrategy
         if (healthyBackends.Count == 0)
             return null;
 
-        _currentIndex = (_currentIndex + 1) % healthyBackends.Count;
-        return healthyBackends[_currentIndex];
+        int index = Interlocked.Increment(ref _currentIndex);
+        return healthyBackends[Math.Abs(index) % healthyBackends.Count];
     }
 }

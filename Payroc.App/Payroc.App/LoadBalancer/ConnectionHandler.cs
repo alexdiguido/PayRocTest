@@ -28,6 +28,7 @@ public class ConnectionHandler : IConnectionHandler
                     Logger.Warn($"Client {clientEndpoint}: No healthy backends available");
                     return;
                 }
+                Logger.Info($"Selected Beckend: {backend.Address}");
 
                 Logger.Info($"Client {clientEndpoint} → Backend {backend.Address}");
 
@@ -49,7 +50,7 @@ public class ConnectionHandler : IConnectionHandler
             {
                 Logger.Error($"Client {clientEndpoint}: {ex.Message}");
             }
-        } 
+        }
     }
 
     /// <summary>

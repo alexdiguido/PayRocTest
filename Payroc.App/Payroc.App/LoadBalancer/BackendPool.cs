@@ -28,6 +28,7 @@ public class BackendPool : IBackendPool
             Logger.Warn("No healthy backends available!");
             return null;
         }
+        Logger.Info($"Healthy backends: {string.Join(", ", healthyBackends.Select(b => b.Address))}");
         return _selectionStrategy.Select(healthyBackends);
     }
 
