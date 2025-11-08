@@ -47,10 +47,25 @@ Request 4 - Status: 200 - Response from Backend-1 at 2025-11-08...
 
 Each request goes to a different backend in rotation.
 
-## Architecture
-
+#### Stop backend
+```powershell
+docker-compose stop backend1
+docker-compose stop backend2
+docker-compose stop backend3
 ```
-Client ? Load Balancer (port 8080) ? Backend 1, 2, or 3 (port 80)
+
+#### Start backend
+```powershell
+docker-compose up backend1
+docker-compose up backend2
+docker-compose up backend3
+```
+
+When all backend are down
+
+**Expected output:**
+```
+[timestamp] [WARN] Client [address] No healthy backends available
 ```
 
 ## Running Tests
